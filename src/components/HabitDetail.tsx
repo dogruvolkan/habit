@@ -90,6 +90,15 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
     setDailyLogs([...dailyLogs, newDay]);
   };
 
+  const deleteDay = (day: number) => {
+    const updatedLogs = dailyLogs.filter((log) => log.day !== day);
+    const reorderedLogs = updatedLogs.map((log, index) => ({
+      ...log,
+      day: index + 1, // Gün sırasını yeniden düzenliyoruz
+    }));
+    setDailyLogs(reorderedLogs);
+  };
+
   // Haftaları oluşturma (7 günlük bölünmüş kartlar)
   const weeks = [];
   for (let i = 0; i < Math.ceil(dailyLogs.length / 7); i++) {
@@ -119,7 +128,15 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
                 key={log.day}
                 className={`card ${log.checked ? "checked" : ""}`}
               >
-                <p>{log.day}. Gün ({log.date})</p>
+               <div className="card-header">
+               <p>{log.day}. Gün ({log.date})</p>
+                <button
+                    className="delete-day-btn"
+                    onClick={() => deleteDay(log.day)}
+                  >
+                    ❌
+                  </button>
+                </div>
                 <p>
                   {log.hoursWorked > 0 ? (
                     log.hoursWorked + " saat çalışıldı"

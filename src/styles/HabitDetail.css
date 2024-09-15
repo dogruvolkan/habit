@@ -1,5 +1,5 @@
 .detail-container{
-    width: 1300px;
+    width: 66.6%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -65,7 +65,7 @@
   }
   
   .card {
-    width: 160px;
+    width: 200px;
     height: 170px;
     border: 1px solid #dee2e6;
     border-radius: 4px;
@@ -89,4 +89,19 @@
    cursor: pointer;
     accent-color: green;
     align-self: center;
+  }
+
+  .card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap:15px;
+  }
+
+  .delete-day-btn {
+    background-color: transparent;
+    padding:0;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
   }
