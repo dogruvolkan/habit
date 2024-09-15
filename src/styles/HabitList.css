@@ -19,7 +19,7 @@
 
 .habitCard {
     width: 270px;
-    height: 100px;
+    height: 150px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -32,6 +32,7 @@
 .btnContainer {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 button {
@@ -65,4 +66,17 @@ button:hover {
 .detailBtn {
     background-color: #FFC107;
     color: black;
+}
+
+.completedCheckbox {
+    width: 30px;
+    height: 30px;
+   cursor: pointer;
+    accent-color: green;
+    align-self: center;
+}
+
+.habitCard.checked {
+    background-color: #c8e3ce;
+    border-color: #82ca93;
 }

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Habit } from "../types";
 import HabitFormModal from "./HabitFormModal";
 import "../styles/HabitList.css";
-interface HabitListProps {
+interface Props {
   onSelectHabit: (habit: Habit) => void;
 }
 
-const HabitList: React.FC<HabitListProps> = ({ onSelectHabit }) => {
+export const HabitList = (props: Props) => {
+  const { onSelectHabit } = props;
   const [habits, setHabits] = useState<Habit[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
@@ -48,12 +49,13 @@ const HabitList: React.FC<HabitListProps> = ({ onSelectHabit }) => {
   };
 
   const handleDeleteHabit = (id: string) => {
-    const confiremed = window.confirm("Bu alışkanlığı silmek istediğinize emin misiniz?");
+    const confiremed = window.confirm(
+      "Bu alışkanlığı silmek istediğinize emin misiniz?"
+    );
     if (!confiremed) {
       return;
     }
     setHabits(habits.filter((habit) => habit.id !== id));
-    
   };
 
   const handleEditHabit = (habit: Habit) => {
@@ -61,10 +63,20 @@ const HabitList: React.FC<HabitListProps> = ({ onSelectHabit }) => {
     setIsModalOpen(true); // Modalı açalım
   };
 
+  const handleToggleCompleted = (id: string) => {
+    setHabits(
+      habits.map((habit) =>
+        habit.id === id ? { ...habit, completed: !habit.completed } : habit
+      )
+    );
+  };
+
   return (
     <div className="container">
-      <h1>Alışkanlıklarım</h1>
-      <button className="addBtn" onClick={() => setIsModalOpen(true)}>Alışkanlık Ekle</button>
+      <h1>Alışkanlıklarım ({habits.length})</h1>
+      <button className="addBtn" onClick={() => setIsModalOpen(true)}>
+        Alışkanlık Ekle
+      </button>
       {isModalOpen && (
         <HabitFormModal
           habit={selectedHabit!}
@@ -74,15 +86,34 @@ const HabitList: React.FC<HabitListProps> = ({ onSelectHabit }) => {
       )}
       <div className="subContainer">
         {habits.map((habit) => (
-          <div key={habit.id} className="habitCard">
+          <div key={habit.id} className={`habitCard ${habit.completed ? "checked" : ""}`}>
             <h3>{habit.title}</h3>
             <div className="btnContainer">
-              <button className="editBtn" onClick={() => handleEditHabit(habit)}>Düzenle</button>
-              <button className="deleteBtn" onClick={() => handleDeleteHabit(habit.id)}>
+              <button
+                className="editBtn"
+                onClick={() => handleEditHabit(habit)}
+              >
+                Düzenle
+              </button>
+              <button
+                className="deleteBtn"
+                onClick={() => handleDeleteHabit(habit.id)}
+              >
                 Sil
               </button>
-              <button className="detailBtn" onClick={() => onSelectHabit(habit)}>Detay</button>
+              <button
+                className="detailBtn"
+                onClick={() => onSelectHabit(habit)}
+              >
+                Detay
+              </button>
             </div>
+            <input
+              className="completedCheckbox"
+              type="checkbox"
+              checked={habit.completed}
+              onChange={() => handleToggleCompleted(habit.id)}
+            />
           </div>
         ))}
       </div>
