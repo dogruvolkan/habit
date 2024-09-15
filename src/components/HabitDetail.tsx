@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Habit } from "../types";
 import "../styles/HabitDetail.css";
+
 interface HabitDetailProps {
   habit: Habit;
   onBack: () => void;
@@ -8,7 +9,7 @@ interface HabitDetailProps {
 
 interface DailyLog {
   day: number;
-  checked: boolean;
+  status: "Yapıldı" | "Yapılmadı" | "Eksik";
   hoursWorked: number;
   date: string;
 }
@@ -26,13 +27,13 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
       setDailyLogs(JSON.parse(storedLogs));
     } else {
       // Eğer localStorage'da yoksa, boş loglarla başla
-      const logs = Array.from({ length: habit.duration }, (_, i) => {
+      const logs: DailyLog[] = Array.from({ length: habit.duration }, (_, i) => {
         const date = new Date(habit.startDate);
         date.setDate(date.getDate() + i);
         return {
           day: i + 1,
-          date: date.toISOString().split('T')[0],
-          checked: false,
+          date: date.toISOString().split("T")[0],
+          status: "Eksik" as "Yapıldı" | "Yapılmadı" | "Eksik", // Varsayılan olarak "Eksik"
           hoursWorked: 0,
         };
       });
@@ -47,11 +48,11 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
     }
   }, [dailyLogs, habit.id]);
 
-  // Gün checkbox'ına tıklanınca yapılan işlemler
-  const toggleCheckbox = (day: number) => {
+  // Status değiştirme işlemi (Yapıldı, Yapılmadı, Eksik)
+  const handleStatusChange = (day: number, newStatus: "Yapıldı" | "Yapılmadı" | "Eksik") => {
     setDailyLogs((prevLogs) =>
       prevLogs.map((log) =>
-        log.day === day ? { ...log, checked: !log.checked } : log
+        log.day === day ? { ...log, status: newStatus } : log
       )
     );
   };
@@ -81,15 +82,16 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
     const newDayIndex = dailyLogs.length + 1;
     const date = new Date(habit.startDate);
     date.setDate(date.getDate() + dailyLogs.length);
-    const newDay = {
+    const newDay: DailyLog = {
       day: newDayIndex,
-      date: date.toISOString().split('T')[0],
-      checked: false,
+      date: date.toISOString().split("T")[0],
+      status: "Eksik", // Varsayılan olarak "Eksik"
       hoursWorked: 0,
     };
     setDailyLogs([...dailyLogs, newDay]);
   };
 
+  // Gün silme işlevi
   const deleteDay = (day: number) => {
     const updatedLogs = dailyLogs.filter((log) => log.day !== day);
     const reorderedLogs = updatedLogs.map((log, index) => ({
@@ -104,6 +106,7 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
   for (let i = 0; i < Math.ceil(dailyLogs.length / 7); i++) {
     weeks.push(dailyLogs.slice(i * 7, i * 7 + 7));
   }
+
   return (
     <div className="detail-container">
       <div className="header">
@@ -114,9 +117,16 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
       </div>
       <div className="sub-content">
         <p>{habit.description}</p>
-        <p><span>Başlangıç Tarihi: </span>{habit.startDate}</p>
-        <p><span>Kaç gün sürecek:</span> {habit.duration} gün</p>
-        <button className="add-day-btn" onClick={addDay}>Gün Ekle</button>
+        <p>
+          <span>Başlangıç Tarihi: </span>
+          {habit.startDate}
+        </p>
+        <p>
+          <span>Kaç gün sürecek:</span> {habit.duration} gün
+        </p>
+        <button className="add-day-btn" onClick={addDay}>
+          Gün Ekle
+        </button>
       </div>
 
       {weeks.map((week, index) => (
@@ -126,32 +136,45 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
             {week.map((log) => (
               <div
                 key={log.day}
-                className={`card ${log.checked ? "checked" : ""}`}
+                className={`card ${log.status === "Yapıldı" ? "checked" : log.status === "Yapılmadı" ? "not-checked": ""}`}
               >
-               <div className="card-header">
-               <p>{log.day}. Gün ({log.date})</p>
-                <button
+                <div className="card-header">
+                  <p>
+                    {log.day}. Gün ({log.date})
+                  </p>
+                  <button
                     className="delete-day-btn"
                     onClick={() => deleteDay(log.day)}
                   >
                     ❌
                   </button>
                 </div>
+
+                <div className="status-container">
+                  <label htmlFor={`status-${log.day}`}>Durum: </label>
+                  {log.status !== "Eksik" ? (log.status) :
+                 
+                  <select
+                    className="status-select"
+                    id={`status-${log.day}`}
+                    value={log.status}
+                    onChange={(e) =>
+                      handleStatusChange(log.day, e.target.value as "Yapıldı" | "Yapılmadı" | "Eksik")
+                    }
+                  >
+                    <option value="Yapıldı">Yapıldı</option>
+                    <option value="Yapılmadı">Yapılmadı</option>
+                    <option value="Eksik">Eksik</option>
+                  </select>   }
+                </div>
+
                 <p>
                   {log.hoursWorked > 0 ? (
                     log.hoursWorked + " saat çalışıldı"
                   ) : (
-                    <button onClick={() => openModal(log.day)}>
-                      Saat Ekle
-                    </button>
+                    <button onClick={() => openModal(log.day)}>Saat Ekle</button>
                   )}
                 </p>
-                <input
-                className="checkbox"
-                  type="checkbox"
-                  checked={log.checked}
-                  onChange={() => toggleCheckbox(log.day)}
-                />
               </div>
             ))}
           </div>
@@ -167,13 +190,13 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
             onChange={(e) => setWorkedHours(Number(e.target.value))}
             placeholder="Çalışılan saat"
           />
-        <div className="btnsContainer">
-        <button className="save" onClick={saveWorkedHours}>
-            Kaydet
-          </button>
-          <button className="close" onClick={() => setIsModalOpen(false)}>
-            İptal
-          </button>
+          <div className="btnsContainer">
+            <button className="save" onClick={saveWorkedHours}>
+              Kaydet
+            </button>
+            <button className="close" onClick={() => setIsModalOpen(false)}>
+              İptal
+            </button>
           </div>
         </div>
       )}

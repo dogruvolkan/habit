@@ -66,13 +66,14 @@
   
   .card {
     width: 200px;
-    height: 170px;
+    height: 160px;
     border: 1px solid #dee2e6;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap:5px;
     cursor: pointer;
     transition: all 0.3s;
   }
@@ -80,6 +81,11 @@
   .card.checked {
     background-color: #d4edda;
     border-color: #c3e6cb;
+  }
+
+  .card.not-checked {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
   }
   
 
@@ -103,5 +109,21 @@
     padding:0;
     font-size: 15px;
     border: none;
+    cursor: pointer;
+  }
+
+  .status-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+   
+  }
+
+  .status-select {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
     cursor: pointer;
   }
