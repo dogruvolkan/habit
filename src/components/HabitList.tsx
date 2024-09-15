@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Habit } from "../types";
 import HabitFormModal from "./HabitFormModal";
 import "../styles/HabitList.css";
