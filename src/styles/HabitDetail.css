@@ -1,5 +1,5 @@
 .detail-container{
-    width: 66.6%;
+    width: 90%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -61,21 +61,22 @@
   .card-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 26px;
+    gap: 9px;
   }
   
   .card {
-    width: 200px;
-    height: 160px;
+    width: 165px;
+    height: 135px;
     border: 1px solid #dee2e6;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap:5px;
+    justify-content: space-around;
     cursor: pointer;
     transition: all 0.3s;
+    gap:5px;
+    padding: 5px;
   }
   
   .card.checked {
@@ -89,19 +90,17 @@
   }
   
 
-  .checkbox{
-    width: 30px;
-    height: 30px;
-   cursor: pointer;
-    accent-color: green;
-    align-self: center;
-  }
-
   .card-header{
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap:15px;
+  }
+
+  .card-header p {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
   }
 
   .delete-day-btn {
@@ -117,12 +116,12 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-   
+    padding-top: 15px;
   }
 
   .status-select {
     width: 100%;
-    padding: 5px;
+    padding: 0 5px;
     border: 1px solid #ced4da;
     border-radius: 4px;
     cursor: pointer;

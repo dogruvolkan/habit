@@ -178,9 +178,9 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
               </div>
             ))}
           </div>
+        
         </div>
       ))}
-
       {isModalOpen && (
         <div className="modal">
           <h3>Gün {selectedDay} - Çalışılan Saat</h3>

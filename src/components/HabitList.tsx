@@ -107,13 +107,14 @@ export const HabitList = (props: Props) => {
               >
                 Detay
               </button>
-            </div>
-            <input
+              <input
               className="completedCheckbox"
               type="checkbox"
               checked={habit.completed}
               onChange={() => handleToggleCompleted(habit.id)}
             />
+            </div>
+           
           </div>
         ))}
       </div>
