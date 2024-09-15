@@ -10,6 +10,7 @@ interface DailyLog {
   day: number;
   checked: boolean;
   hoursWorked: number;
+  date: string;
 }
 
 const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
@@ -25,14 +26,19 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
       setDailyLogs(JSON.parse(storedLogs));
     } else {
       // Eğer localStorage'da yoksa, boş loglarla başla
-      const logs = Array.from({ length: habit.duration }, (_, i) => ({
-        day: i + 1,
-        checked: false,
-        hoursWorked: 0,
-      }));
+      const logs = Array.from({ length: habit.duration }, (_, i) => {
+        const date = new Date(habit.startDate);
+        date.setDate(date.getDate() + i);
+        return {
+          day: i + 1,
+          date: date.toISOString().split('T')[0],
+          checked: false,
+          hoursWorked: 0,
+        };
+      });
       setDailyLogs(logs);
     }
-  }, [habit.id, habit.duration]);
+  }, [habit.id, habit.duration, habit.startDate]);
 
   // Verileri localStorage'a kaydet
   useEffect(() => {
@@ -70,12 +76,25 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
     setIsModalOpen(false);
   };
 
+  // Gün ekleme işlevi
+  const addDay = () => {
+    const newDayIndex = dailyLogs.length + 1;
+    const date = new Date(habit.startDate);
+    date.setDate(date.getDate() + dailyLogs.length);
+    const newDay = {
+      day: newDayIndex,
+      date: date.toISOString().split('T')[0],
+      checked: false,
+      hoursWorked: 0,
+    };
+    setDailyLogs([...dailyLogs, newDay]);
+  };
+
   // Haftaları oluşturma (7 günlük bölünmüş kartlar)
   const weeks = [];
-  for (let i = 0; i < Math.ceil(habit.duration / 7); i++) {
+  for (let i = 0; i < Math.ceil(dailyLogs.length / 7); i++) {
     weeks.push(dailyLogs.slice(i * 7, i * 7 + 7));
   }
-
   return (
     <div className="detail-container">
       <div className="header">
@@ -88,6 +107,7 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
         <p>{habit.description}</p>
         <p><span>Başlangıç Tarihi: </span>{habit.startDate}</p>
         <p><span>Kaç gün sürecek:</span> {habit.duration} gün</p>
+        <button className="add-day-btn" onClick={addDay}>Gün Ekle</button>
       </div>
 
       {weeks.map((week, index) => (
@@ -99,7 +119,7 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
                 key={log.day}
                 className={`card ${log.checked ? "checked" : ""}`}
               >
-                <p>{log.day}. Gün</p>
+                <p>{log.day}. Gün ({log.date})</p>
                 <p>
                   {log.hoursWorked > 0 ? (
                     log.hoursWorked + " saat çalışıldı"
