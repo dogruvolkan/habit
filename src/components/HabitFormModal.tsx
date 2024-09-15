@@ -31,6 +31,8 @@ const HabitFormModal: React.FC<HabitFormModalProps> = ({ onSave, onClose, habit 
       startDate,
       duration,
       dailyLogs: habit ? habit.dailyLogs : [] // Düzenleme ise önceki logları koru
+      ,
+      completed: false
     };
     onSave(newHabit);
     onClose(); // Modalı kapat
