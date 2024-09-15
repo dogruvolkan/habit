@@ -1,0 +1,68 @@
+.container {
+    width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:40px;
+    margin: 0 auto;
+    padding-top: 30px;
+
+}
+
+.subContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+   
+}
+
+.habitCard {
+    width: 270px;
+    height: 100px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    border:1px solid #ddd;
+}
+
+
+.btnContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    padding: 8px 21px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: filter 0.3s;
+    font-size: 16px;
+}
+
+button:hover {
+    filter: brightness(0.9);
+}
+
+.addBtn {
+    background-color: #28a745;
+    color: white;
+}
+
+.editBtn {
+    background-color: #4158A6;
+    color: white;
+}
+
+.deleteBtn {
+    background-color: #B8001F;
+    color: white;
+}
+
+.detailBtn {
+    background-color: #FFC107;
+    color: black;
+}
