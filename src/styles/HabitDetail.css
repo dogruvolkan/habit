@@ -126,3 +126,25 @@
     border-radius: 4px;
     cursor: pointer;
   }
+
+  .card .topic-text {
+    position: relative;
+  }
+  
+  .card .hidden-text {
+    visibility: hidden;
+    background-color: #68cc3a;
+    color: black;
+    text-align: center;
+    border-radius: 6px;
+    padding: 15px;
+    position: absolute;
+    top:25px;
+    left:0;
+    z-index: 1;
+  }
+  
+  .card .hover-text:hover + .hidden-text {
+    visibility: visible;
+  }
+  

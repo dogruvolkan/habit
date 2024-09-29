@@ -12,6 +12,7 @@ interface DailyLog {
   status: "Yapıldı" | "Yapılmadı" | "Eksik";
   hoursWorked: number;
   date: string;
+  workedTopic: string;
 }
 
 const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
@@ -19,6 +20,7 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [workedHours, setWorkedHours] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [workedTopics, setWorkedTopics] = useState<string>("");
 
   // Alışkanlık verilerini localStorage'dan çek
   useEffect(() => {
@@ -35,6 +37,7 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
           date: date.toISOString().split("T")[0],
           status: "Eksik" as "Yapıldı" | "Yapılmadı" | "Eksik", // Varsayılan olarak "Eksik"
           hoursWorked: 0,
+          workedTopic: "",
         };
       });
       setDailyLogs(logs);
@@ -63,15 +66,18 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
     if (log) {
       setSelectedDay(day);
       setWorkedHours(log.hoursWorked);
+      setWorkedTopics(log.workedTopic);
       setIsModalOpen(true);
     }
   };
 
   // Modal'da saatleri kaydetme
-  const saveWorkedHours = () => {
+  const saveWorkedDetails = () => {
     setDailyLogs((prevLogs) =>
       prevLogs.map((log) =>
-        log.day === selectedDay ? { ...log, hoursWorked: workedHours } : log
+        log.day === selectedDay
+          ? { ...log, hoursWorked: workedHours, workedTopic: workedTopics } // Konuyu da kaydet
+          : log
       )
     );
     setIsModalOpen(false);
@@ -87,6 +93,7 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
       date: date.toISOString().split("T")[0],
       status: "Eksik", // Varsayılan olarak "Eksik"
       hoursWorked: 0,
+      workedTopic: "",
     };
     setDailyLogs([...dailyLogs, newDay]);
   };
@@ -170,28 +177,43 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
 
                 <p>
                   {log.hoursWorked > 0 ? (
-                    log.hoursWorked + " saat çalışıldı"
+                   
+                    log.workedTopic && (
+                      <p className="topic-text">
+                        <span className="hover-text"> {log.hoursWorked} saat çalışıldı</span>
+                        <span className="hidden-text">{log.workedTopic}</span>
+                      </p>
+                    )
                   ) : (
-                    <button onClick={() => openModal(log.day)}>Saat Ekle</button>
+                    <button onClick={() => openModal(log.day)}>Detay Gir</button>
                   )}
                 </p>
+
+            
+               
               </div>
             ))}
           </div>
         
         </div>
       ))}
-      {isModalOpen && (
+        {isModalOpen && (
         <div className="modal">
-          <h3>Gün {selectedDay} - Çalışılan Saat</h3>
+          <h3>Gün {selectedDay} - Çalışma Detayları </h3>
           <input
             type="number"
             value={workedHours}
             onChange={(e) => setWorkedHours(Number(e.target.value))}
             placeholder="Çalışılan saat"
           />
+          <input
+            type="text"
+            value={workedTopics}
+            onChange={(e) => setWorkedTopics(e.target.value)}
+            placeholder="Çalışılan konu"
+          />
           <div className="btnsContainer">
-            <button className="save" onClick={saveWorkedHours}>
+            <button className="save" onClick={saveWorkedDetails}>
               Kaydet
             </button>
             <button className="close" onClick={() => setIsModalOpen(false)}>
