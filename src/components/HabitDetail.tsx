@@ -176,11 +176,11 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
                 </div>
 
                 <p>
-                  {log.hoursWorked > 0 ? (
+                  {log.hoursWorked ? (
                    
                     log.workedTopic && (
                       <p className="topic-text">
-                        <span className="hover-text"> {log.hoursWorked} saat çalışıldı</span>
+                        <span className="hover-text"> {log.hoursWorked === -1 ? "hiç" : log.hoursWorked} {log.hoursWorked > 4 ? "dakika" : "saat"}  {log.hoursWorked > 0 ? "çalışıldı" : "çalışılmadı"}</span>
                         <span className="hidden-text">{log.workedTopic}</span>
                       </p>
                     )
