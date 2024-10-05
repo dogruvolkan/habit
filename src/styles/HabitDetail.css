@@ -26,6 +26,7 @@
 }
 
 .sub-content {
+    width: 400px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -146,5 +147,32 @@
   
   .card .hover-text:hover + .hidden-text {
     visibility: visible;
+  }
+
+  .week-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .week-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+  
+  .week-btn {
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .week-btn:hover {
+    background-color: #e0e0e0;
   }
   

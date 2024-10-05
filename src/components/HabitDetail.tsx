@@ -114,6 +114,50 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
     weeks.push(dailyLogs.slice(i * 7, i * 7 + 7));
   }
 
+    // Handler to mark weekdays as "Yapılmadı"
+    const markWeekdaysNotCompleted = (weekIndex: number) => {
+      const updatedLogs = dailyLogs.map((log) => {
+        const weekStart = weekIndex * 7;
+        const weekEnd = weekStart + 7;
+        const currentWeek = dailyLogs.slice(weekStart, weekEnd);
+        const currentLogIndex = currentWeek.findIndex((wLog) => wLog.day === log.day);
+        if (currentLogIndex !== -1 && currentLogIndex < 5) { // Monday to Friday (0-4)
+          return { ...log, status: "Yapılmadı" as "Yapıldı" | "Yapılmadı" | "Eksik" };
+        }
+        return log;
+      });
+      setDailyLogs(updatedLogs);
+    };
+  
+    // Handler to mark weekends as "Yapılmadı"
+    const markWeekendsNotCompleted = (weekIndex: number) => {
+      const updatedLogs = dailyLogs.map((log) => {
+        const weekStart = weekIndex * 7;
+        const weekEnd = weekStart + 7;
+        const currentWeek = dailyLogs.slice(weekStart, weekEnd);
+        const currentLogIndex = currentWeek.findIndex((wLog) => wLog.day === log.day);
+        if (currentLogIndex !== -1 && currentLogIndex >= 5 && currentLogIndex < 7) { // Saturday and Sunday (5-6)
+          return { ...log, status: "Yapılmadı" as "Yapıldı" | "Yapılmadı" | "Eksik" };
+        }
+        return log;
+      });
+      setDailyLogs(updatedLogs);
+    };
+  
+    // Handler to mark the entire week as "Yapılmadı"
+    const markEntireWeekNotCompleted = (weekIndex: number) => {
+      const updatedLogs = dailyLogs.map((log) => {
+        const weekStart = weekIndex * 7;
+        const weekEnd = weekStart + 7;
+        const currentWeek = dailyLogs.slice(weekStart, weekEnd);
+        if (currentWeek.some((wLog) => wLog.day === log.day)) {
+          return { ...log, status: "Yapılmadı" as "Yapıldı" | "Yapılmadı" | "Eksik" };
+        }
+        return log;
+      });
+      setDailyLogs(updatedLogs);
+    };
+
   return (
     <div className="detail-container">
       <div className="header">
@@ -129,7 +173,19 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
           {habit.startDate}
         </p>
         <p>
-          <span>Kaç gün sürecek:</span> {habit.duration} gün
+          <span>Kaç gün sürecek: </span> {habit.duration} gün
+        </p>
+        <p>
+          <span>Kaç gün yapıldı: </span>
+          {dailyLogs.filter((log) => log.status === "Yapıldı").length} gün
+        </p>
+        <p>
+          <span>Kaç gün yapılmadı: </span>
+          {dailyLogs.filter((log) => log.status === "Yapılmadı").length} gün
+        </p>
+        <p>
+          <span>Kaç gün Kaldı: </span>
+          {dailyLogs.filter((log) => log.status === "Eksik").length} gün
         </p>
         <button className="add-day-btn" onClick={addDay}>
           Gün Ekle
@@ -139,6 +195,26 @@ const HabitDetail: React.FC<HabitDetailProps> = ({ habit, onBack }) => {
       {weeks.map((week, index) => (
         <div className="week-container" key={index}>
           <h3 className="week-header">{index + 1}. Hafta</h3>
+          <div className="week-buttons">
+              <button
+                className="week-btn"
+                onClick={() => markWeekdaysNotCompleted(index)}
+              >
+                Hafta İçi Tamamlanmadı
+              </button>
+              <button
+                className="week-btn"
+                onClick={() => markWeekendsNotCompleted(index)}
+              >
+                Hafta Sonu Tamamlanmadı
+              </button>
+              <button
+                className="week-btn"
+                onClick={() => markEntireWeekNotCompleted(index)}
+              >
+                Hafta Tamamlanmadı
+              </button>
+            </div>
           <div className="card-container">
             {week.map((log) => (
               <div
