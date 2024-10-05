@@ -1,31 +1,29 @@
 .container {
-    width: 95%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap:40px;
-    padding: 0 30px;
-    padding-top: 30px;
-
+    gap: 20px;
 }
 
 .subContainer {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     gap: 20px;
    
 }
 
 .habitCard {
-    width: 310px;
-    height: 100px;
+    width: 300px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px;
     border:1px solid #ddd;
+    padding:0 10px;
 }
 
 
@@ -34,7 +32,6 @@
     justify-content: space-between;
     align-items: center;
     gap:10px;
-    margin-bottom: 20px;
 }
 
 button {
@@ -74,7 +71,7 @@ button:hover {
 .completedCheckbox {
     width: 45px;
     height: 45px;
-   cursor: pointer;
+    cursor: pointer;
     accent-color: green;
     align-self: center;
 }
